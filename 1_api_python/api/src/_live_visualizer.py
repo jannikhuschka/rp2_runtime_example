@@ -128,25 +128,31 @@ class LivePlotter:
         win.resize(1400, 700)
 
         if self._display_mode == "grid":
-            num_cols = max((col for _, col in self._grid_positions), default=0) + 1
+            num_cols = max(map(len, self._grid_positions), default=0)
         else:
             num_cols = max(1, min(len(self.data_buffers), self.PLOTS_PER_ROW))
         self._runtime_label = win.addLabel(
             "Laufzeit: 00:00:00", row=0, col=0, colspan=num_cols, justify="left", size="12pt"
         )
+        num_rows = len(self._grid_positions)
 
         plot_items = []
         curves = []
         curve_source_indices = []
 
         if self._display_mode == "grid":
-            for idx in range(len(self.data_buffers)):
-                row, col = self._grid_positions[idx]
-                plot_item = self._make_plot_item(win, row + 1, col, self._grid_units[idx])
-                curve = self._make_curve(plot_item, curve_color, curve_labels, idx)
-                plot_items.append(plot_item)
-                curves.append(curve)
-                curve_source_indices.append(idx)
+            for row in range(num_rows):
+                for col in range(num_cols):
+                    if (row, col) not in self._grid_positions:
+                        win.addViewBox(row, col)
+                        continue
+
+                    idx = self._grid_positions.index((row, col))
+                    plot_item = self._make_plot_item(win, row + 1, col, self._grid_units[idx])
+                    curve = self._make_curve(plot_item, curve_color, curve_labels, idx)
+                    plot_items.append(plot_item)
+                    curves.append(curve)
+                    curve_source_indices.append(idx)
         else:
             for idx in range(len(self.data_buffers)):
                 row, col = divmod(idx, self.PLOTS_PER_ROW)
