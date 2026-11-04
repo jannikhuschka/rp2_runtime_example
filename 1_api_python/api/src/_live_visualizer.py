@@ -124,16 +124,14 @@ class LivePlotter:
 
     def _init_plot(self, curve_color: str, curve_labels: list[str]) -> tuple:
         app = QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
-        win = pg.GraphicsLayoutWidget(show=True, title="LSL Live Plot")
+        win = pg.GraphicsLayoutWidget(show=True, title="LSL Live Plot\t Laufzeit: 00:00:00")
         win.resize(1400, 700)
 
         if self._display_mode == "grid":
             num_cols = max(map(len, self._grid_positions), default=0)
         else:
             num_cols = max(1, min(len(self.data_buffers), self.PLOTS_PER_ROW))
-        self._runtime_label = win.addLabel(
-            "Laufzeit: 00:00:00", row=0, col=0, colspan=num_cols, justify="left", size="12pt"
-        )
+
         num_rows = len(self._grid_positions)
 
         plot_items = []
@@ -148,7 +146,7 @@ class LivePlotter:
                         continue
 
                     idx = self._grid_positions.index((row, col))
-                    plot_item = self._make_plot_item(win, row + 1, col, self._grid_units[idx])
+                    plot_item = self._make_plot_item(win, row , col, self._grid_units[idx])
                     curve = self._make_curve(plot_item, curve_color, curve_labels, idx)
                     plot_items.append(plot_item)
                     curves.append(curve)
@@ -183,7 +181,7 @@ class LivePlotter:
         self._last_runtime_sec = elapsed
         hours, remainder = divmod(elapsed, 3600)
         minutes, seconds = divmod(remainder, 60)
-        self._runtime_label.setText(f"Laufzeit: {hours:02d}:{minutes:02d}:{seconds:02d}")
+        self._win.setWindowTitle(f"LSL Live Plot\t Laufzeit: {hours:02d}:{minutes:02d}:{seconds:02d}")
 
     def _update(self) -> None:
         self._update_runtime_label()
