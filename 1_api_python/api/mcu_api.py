@@ -396,7 +396,7 @@ class DeviceAPI:
             self.__layout_labels = [f"CH{idx}" for idx in range(self.__daq_config.num_channels)]
             self.__layout_channels = [[idx for idx in range(self.__daq_config.num_channels)]]
             self.__layout_units = [" " for _ in range(self.__daq_config.num_channels)]
-        active = sum(1 for channel_number in self.__layout_channels if channel_number)
+        active = sum(sum(1 for channel_number in channels_in_row if channel_number) for channels_in_row in self.__layout_channels)
         if not len(self.__layout_labels) == active == self.__daq_config.num_channels:
             raise ValueError(
                 f"Number of channels in layout ({self.__daq_config.num_channels}) does not match number of channels in DAQ ({len(self.__layout_labels)})"

@@ -8,9 +8,9 @@ if __name__ == "__main__":
     DeviceAPI().do_reset()
     dut = DeviceAPI()
     dut.define_channel_layout(
-        channel_layout=[[1, 0], [0, 2]],
-        channel_names=["CH0", "CH1"],
-        channel_units=["LSB", "LSB"]
+        channel_layout=[[1, 2], [3, 4], [5, 6], [7, 8]],
+        channel_names=["CH0", "CH1", "CH2", "CH3", "CH4", "CH5", "CH6", "CH7"],
+        channel_units=["LSB", "LSB", "LSB", "LSB", "LSB", "LSB", "LSB", "LSB"]
     )
     dut.start_daq(
         sampling_rate=1000.0,

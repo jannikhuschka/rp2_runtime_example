@@ -144,7 +144,7 @@ class LivePlotter:
             for row in range(num_rows):
                 for col in range(num_cols):
                     if (row, col) not in self._grid_positions:
-                        win.addViewBox(row, col)
+                        win.addViewBox(row + 1, col)
                         continue
 
                     idx = self._grid_positions.index((row, col))
